@@ -73,6 +73,8 @@ export class PostController {
       throw new BadRequestException(
         'post yang ingin diupdate (PUT) tidak ditemukan',
       );
+    //   Cek UserId Valid
+    await this.postService.checkUser(body.userId);
     return this.postService.saveLocal(post);
   }
 
@@ -83,11 +85,14 @@ export class PostController {
     @Body() body: UpdatePostPatchDto,
   ) {
     const post = await this.postService.updatePatch(Number(id), body);
+
     const cekPost = await this.postService.findOneLocal(Number(id));
     if (!cekPost)
       throw new BadRequestException(
         'post yang ingin diupdate (PATCH) tidak ditemukan',
       );
+    //   Cek UserId Valid
+    await this.postService.checkUser(post.userId);
     return this.postService.saveLocal(post);
   }
 
